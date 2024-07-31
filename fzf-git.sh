@@ -212,7 +212,7 @@ _fzf_git_tags() {
     --preview "git show --color=$(__fzf_git_color .) {} | $(__fzf_git_pager)" "$@"
 }
 
-_fzf_git_hashes() {
+_fzf_git_ucommits() {
   _fzf_git_check || return
   bash "$__fzf_git" hashes |
   _fzf_git_fzf --ansi --no-sort --bind 'ctrl-s:toggle-sort' \
@@ -220,7 +220,7 @@ _fzf_git_hashes() {
     --header-lines 3 \
     --bind "ctrl-o:execute-silent:bash $__fzf_git commit {}" \
     --bind "ctrl-d:execute:grep -o '[a-f0-9]\{7,\}' <<< {} | head -n 1 | xargs git diff --color=$(__fzf_git_color) > /dev/tty" \
-    --bind "alt-a:change-border-label(🍇 All hashes)+reload:bash \"$__fzf_git\" all-hashes" \
+    --bind "alt-a:change-border-label(🍇 All commits)+reload:bash \"$__fzf_git\" all-hashes" \
     --color hl:underline,hl+:underline \
     --preview "grep -o '[a-f0-9]\{7,\}' <<< {} | head -n 1 | xargs git show --color=$(__fzf_git_color .) | $(__fzf_git_pager)" "$@" |
   awk 'match($0, /[a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9]*/) { print substr($0, RSTART, RLENGTH) }'
@@ -248,7 +248,7 @@ _fzf_git_stashes() {
   cut -d: -f1
 }
 
-_fzf_git_lreflogs() {
+_fzf_git_yreflogs() {
   _fzf_git_check || return
   git reflog --color=$(__fzf_git_color) --format="%C(blue)%gD %C(yellow)%h%C(auto)%d %gs" | _fzf_git_fzf --ansi \
     --border-label '📒 Reflogs' \
@@ -326,7 +326,7 @@ elif [[ -n "${ZSH_VERSION:-}" ]]; then
     done
   }
 fi
-__fzf_git_init files branches tags remotes hashes stashes lreflogs each_ref worktrees
+__fzf_git_init files branches tags remotes ucommits stashes yreflogs each_ref worktrees
 
 # -----------------------------------------------------------------------------
 fi
